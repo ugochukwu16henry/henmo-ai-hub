@@ -1,0 +1,31 @@
+{
+  "name": "henmo-ai",
+  "version": "1.0.0",
+  "description": "HenMo AI - Enterprise AI Platform with ChatBoss Assistant",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev --workspace=apps/api",
+    "dev:hub": "npm run dev --workspace=apps/hub",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "build:all": "npm run build --workspaces",
+    "db:migrate": "npm run migrate --workspace=packages/database",
+    "db:seed": "npm run seed --workspace=packages/database",
+    "test": "npm run test --workspaces",
+    "lint": "eslint . --ext .js,.ts,.tsx",
+    "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.4",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "HenMo AI",
+  "license": "PROPRIETARY"
+}
