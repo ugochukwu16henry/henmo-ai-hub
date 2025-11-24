@@ -3,11 +3,15 @@ const router = express.Router();
 
 const authRoutes = require('./auth.routes');
 const userRoutes = require('./user.routes');
+const conversationRoutes = require('./conversation.routes');
+const aiRoutes = require('./ai.routes');
 
 // Health check endpoint
 router.get('/health', async (req, res) => {
   const db = require('../config/database');
+  const aiService = require('../services/ai');
   const dbHealth = await db.healthCheck();
+  const aiProviders = aiService.getAvailableProviders();
   
   res.json({
     success: true,
@@ -16,6 +20,7 @@ router.get('/health', async (req, res) => {
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       database: dbHealth,
+      ai: aiProviders,
     },
   });
 });
@@ -31,8 +36,9 @@ router.get('/', (req, res) => {
       endpoints: {
         auth: '/api/v1/auth',
         users: '/api/v1/users',
-        conversations: '/api/v1/conversations (coming soon)',
-        ai: '/api/v1/ai (coming soon)',
+        conversations: '/api/v1/conversations',
+        ai: '/api/v1/ai',
+        memory: '/api/v1/memory (coming soon)',
         streets: '/api/v1/streets (coming soon)',
         contributions: '/api/v1/contributions (coming soon)',
       },
@@ -43,5 +49,7 @@ router.get('/', (req, res) => {
 // Mount routes
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
+router.use('/conversations', conversationRoutes);
+router.use('/ai', aiRoutes);
 
 module.exports = router;
