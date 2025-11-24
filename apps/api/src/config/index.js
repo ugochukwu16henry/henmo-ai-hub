@@ -32,9 +32,41 @@ module.exports = {
     max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100,
   },
 
-  logging: {
-    level: process.env.LOG_LEVEL || 'debug',
-  },
+  logging: { level: process.env.LOG_LEVEL || "debug" },
+// -------- NEW AI CONFIGURATION STARTS HERE --------
+   ai: {
+     defaultProvider: process.env.DEFAULT_AI_PROVIDER || 'anthropic',
+     defaultModel: process.env.DEFAULT_MODEL || 'claude-sonnet-4-20250514',
+     maxContextMessages: parseInt(process.env.MAX_CONTEXT_MESSAGES, 10) || 20,
+     maxMemoryResults: parseInt(process.env.MAX_MEMORY_RESULTS, 10) || 5,
+     
+     anthropic: {
+       apiKey: process.env.ANTHROPIC_API_KEY,
+       models: {
+         'claude-opus': 'claude-opus-4-20250514',
+         'claude-sonnet': 'claude-sonnet-4-20250514',
+         'claude-haiku': 'claude-haiku-4-20250514',
+       },
+     },
+     
+     openai: {
+       apiKey: process.env.OPENAI_API_KEY,
+       models: {
+         'gpt-4': 'gpt-4-turbo-preview',
+         'gpt-4-turbo': 'gpt-4-turbo',
+         'gpt-3.5': 'gpt-3.5-turbo',
+       },
+     },
+     
+     google: {
+       apiKey: process.env.GOOGLE_AI_API_KEY,
+       models: {
+         'gemini-pro': 'gemini-pro',
+         'gemini-pro-vision': 'gemini-pro-vision',
+       },
+     },
+   },
+// -------- NEW AI CONFIGURATION ENDS HERE --------
 
   subscriptionLimits: {
     free: {
