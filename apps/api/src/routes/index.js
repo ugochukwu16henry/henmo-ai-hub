@@ -5,6 +5,7 @@ const authRoutes = require('./auth.routes');
 const userRoutes = require('./user.routes');
 const conversationRoutes = require('./conversation.routes');
 const aiRoutes = require('./ai.routes');
+const memoryRoutes = require('./memory.routes');
 
 // Health check endpoint
 router.get('/health', async (req, res) => {
@@ -51,5 +52,6 @@ router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/conversations', conversationRoutes);
 router.use('/ai', aiRoutes);
+router.use('/memory', memoryRoutes);
 
 module.exports = router;
