@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
@@ -11,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { MessageSquare, Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
-  const router = useRouter();
+export default function LoginPage() {
   const { login, isLoading, error, clearError } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,12 +21,14 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      router.push('/dashboard');
+      // Use a safe fallback navigation if next/navigation isn't available
+      if (typeof window !== 'undefined') {
+        window.location.assign('/dashboard');
+      }
     } catch (err) {
       // Error is handled by the store
     }
   };
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <Card className="w-full max-w-md">
