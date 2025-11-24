@@ -52,7 +52,7 @@ module.exports = {
      openai: {
        apiKey: process.env.OPENAI_API_KEY,
        models: {
-         'gpt-4': 'gpt-4-turbo-preview',
+         'gpt-4': 'gpt-4-turbo-2024-04-09',
          'gpt-4-turbo': 'gpt-4-turbo',
          'gpt-3.5': 'gpt-3.5-turbo',
        },
