@@ -1,8 +1,9 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, memo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -19,7 +20,8 @@ import {
   BookOpen,
   Code2,
   BarChart3,
-  Camera
+  Camera,
+  Award
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 
@@ -36,6 +38,7 @@ const navigation = [
   { name: 'Memory', href: '/memory', icon: Brain },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Streets', href: '/streets', icon: Camera },
+  { name: 'Contributor', href: '/contributor', icon: Award },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
@@ -46,7 +49,7 @@ const adminNavigation = [
   { name: 'Invitations', href: '/admin/invitations', icon: UserPlus },
 ];
 
-export function DashboardLayout({ children }: DashboardLayoutProps) {
+const DashboardLayout = memo(function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
   const { user, logout, isAuthenticated, isLoading } = useAuth();
   
@@ -157,4 +160,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
     </div>
   );
-}
+});
+
+export { DashboardLayout };
