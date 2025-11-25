@@ -14,7 +14,8 @@ import {
   Users,
   UserPlus,
   Shield,
-  Globe
+  Globe,
+  LogOut
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 
@@ -37,7 +38,22 @@ const adminNavigation = [
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, logout, isAuthenticated, isLoading } = useAuth();
+  
+  // Redirect to login if not authenticated
+  if (!isLoading && !isAuthenticated) {
+    window.location.href = '/login';
+    return null;
+  }
+  
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
   
   const isAdmin = user && ['admin', 'super_admin'].includes(user.role);
   
@@ -109,6 +125,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
             </>
           )}
+          
+          <div className="absolute bottom-4 left-3 right-3">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+              onClick={logout}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
+            </Button>
+          </div>
         </nav>
       </div>
       
