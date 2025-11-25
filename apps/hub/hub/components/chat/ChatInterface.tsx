@@ -51,7 +51,7 @@ export function ChatInterface({ conversationId, initialMessages = [] }: ChatInte
         content: userMessage,
       });
 
-      const { userMessage: savedUserMsg, assistantMessage } = response.data.data;
+      const { userMessage: savedUserMsg, assistantMessage } = (response.data as any).data;
 
       // Replace temp message with real messages
       setMessages((prev) => [
