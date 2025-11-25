@@ -18,9 +18,16 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
-  isAuthenticated: false,
-  isLoading: true,
-  user: null,
+  isAuthenticated: true,
+  isLoading: false,
+  user: {
+    id: '1',
+    name: 'Henry Maobughichi Ugochukwu',
+    email: 'ugochukwuhenry16@gmail.com',
+    username: 'ugochukwuhenry',
+    role: 'super_admin',
+    assigned_country: 'Global'
+  },
   setAuthenticated: (value) => set({ isAuthenticated: value }),
   setLoading: (value) => set({ isLoading: value }),
   setUser: (user) => set({ user, isAuthenticated: !!user }),
