@@ -6,20 +6,34 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, Loader2, Bot, User } from 'lucide-react';
+import { Send, Loader2, Bot, User, Settings, Paperclip } from 'lucide-react';
 import api from '@/lib/api';
 import { Message } from '@/types';
 import { formatRelativeTime } from '@/lib/utils';
+import { ModelSelector } from './ModelSelector';
+import { FileUpload } from './FileUpload';
 
 interface ChatInterfaceProps {
   conversationId: string;
   initialMessages?: Message[];
 }
 
+interface UploadedFile {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  content?: string;
+  url?: string;
+}
+
 export function ChatInterface({ conversationId, initialMessages = [] }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedModel, setSelectedModel] = useState('gpt-4');
+  const [showFileUpload, setShowFileUpload] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,6 +63,8 @@ export function ChatInterface({ conversationId, initialMessages = [] }: ChatInte
     try {
       const response = await api.post(`/conversations/${conversationId}/messages`, {
         content: userMessage,
+        model: selectedModel,
+        files: uploadedFiles.length > 0 ? uploadedFiles : undefined,
       });
 
       const { userMessage: savedUserMsg, assistantMessage } = (response.data as any).data;
@@ -59,6 +75,9 @@ export function ChatInterface({ conversationId, initialMessages = [] }: ChatInte
         savedUserMsg,
         assistantMessage,
       ]);
+      
+      // Clear uploaded files after sending
+      setUploadedFiles([]);
     } catch (error: any) {
       console.error('Failed to send message:', error);
       // Remove temp message on error
@@ -78,6 +97,29 @@ export function ChatInterface({ conversationId, initialMessages = [] }: ChatInte
 
   return (
     <div className="flex h-[calc(100vh-12rem)] flex-col">
+      {/* Header with Model Selector */}
+      <div className="flex items-center justify-between p-4 border-b">
+        <ModelSelector selectedModel={selectedModel} onModelChange={setSelectedModel} />
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowFileUpload(!showFileUpload)}
+        >
+          <Paperclip className="h-4 w-4 mr-2" />
+          Files
+        </Button>
+      </div>
+
+      {/* File Upload Area */}
+      {showFileUpload && (
+        <div className="p-4 border-b bg-gray-50">
+          <FileUpload
+            onFilesUpload={(files) => setUploadedFiles([...uploadedFiles, ...files])}
+            uploadedFiles={uploadedFiles}
+            onRemoveFile={(fileId) => setUploadedFiles(files => files.filter(f => f.id !== fileId))}
+          />
+        </div>
+      )}
       {/* Messages */}
       <ScrollArea className="flex-1 pr-4" ref={scrollRef}>
         <div className="space-y-4">
@@ -119,7 +161,7 @@ export function ChatInterface({ conversationId, initialMessages = [] }: ChatInte
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Type your message... (Shift+Enter for new line)"
+            placeholder={uploadedFiles.length > 0 ? `Ask about ${uploadedFiles.length} file(s)...` : "Type your message... (Shift+Enter for new line)"}
             className="min-h-[60px] resize-none"
             disabled={isLoading}
           />
@@ -127,6 +169,11 @@ export function ChatInterface({ conversationId, initialMessages = [] }: ChatInte
             <Send className="h-4 w-4" />
           </Button>
         </div>
+        {uploadedFiles.length > 0 && (
+          <div className="mt-2 text-xs text-gray-500">
+            {uploadedFiles.length} file(s) attached • Using {selectedModel}
+          </div>
+        )}
       </Card>
     </div>
   );
