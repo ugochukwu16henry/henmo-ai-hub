@@ -78,7 +78,7 @@ export function SmartMemoryForm({ onClose, onAdd }: SmartMemoryFormProps) {
       if (text.includes('idea') || text.includes('concept')) tags.push('idea');
     }
     
-    return [...new Set(tags)].slice(0, 5);
+    return Array.from(new Set(tags)).slice(0, 5);
   };
 
   const generateTitle = (content: string, isCode: boolean): string => {
