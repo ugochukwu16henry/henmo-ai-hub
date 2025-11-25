@@ -7,7 +7,7 @@ const userRoutes = require('./user.routes');
 const conversationRoutes = require('./conversation.routes');
 const aiRoutes = require('./ai.routes');
 const memoryRoutes = require('./memory.routes');
-const adminRoutes = require('./admin.routes');
+// const adminRoutes = require('./admin.routes');
 
 // Health check endpoint
 router.get('/health', async (req, res) => {
@@ -43,7 +43,7 @@ router.get('/', (req, res) => {
         conversations: '/api/v1/conversations',
         ai: '/api/v1/ai',
         memory: '/api/v1/memory (coming soon)',
-        admin: '/api/v1/admin',
+        // admin: '/api/v1/admin',
         streets: '/api/v1/streets (coming soon)',
         contributions: '/api/v1/contributions (coming soon)',
       },
@@ -58,6 +58,6 @@ router.use('/users', userRoutes);
 router.use('/conversations', conversationRoutes);
 router.use('/ai', aiRoutes);
 router.use('/memory', memoryRoutes);
-router.use('/admin', adminRoutes);
+// router.use('/admin', adminRoutes);
 
 module.exports = router;

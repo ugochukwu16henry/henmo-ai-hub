@@ -134,7 +134,22 @@ const secureLogout = async (req, res) => {
 // Get current user (with session validation)
 const getCurrentUser = async (req, res) => {
   try {
-    const user = req.user; // Set by validateSession middleware
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    
+    if (!token) {
+      return res.status(401).json({ error: { message: 'No token provided' } });
+    }
+    
+    const result = await query(
+      'SELECT * FROM users WHERE session_token = $1 AND session_token IS NOT NULL',
+      [token]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: { message: 'Invalid session' } });
+    }
+    
+    const user = result.rows[0];
     
     const userData = {
       id: user.id,
