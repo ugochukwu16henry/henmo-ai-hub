@@ -29,8 +29,8 @@ export default function DashboardPage() {
           api.get('/memory/stats'),
         ]);
 
-        setConversationStats(convResponse.data.data);
-        setMemoryStats(memResponse.data.data);
+        setConversationStats((convResponse.data as any).data);
+        setMemoryStats((memResponse.data as any).data);
       } catch (error) {
         console.error('Failed to fetch stats:', error);
       } finally {
@@ -46,7 +46,7 @@ export default function DashboardPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-gray-600">Welcome back! Here's your overview.</p>
+          <p className="text-gray-600">Welcome back! Here&apos;s your overview.</p>
         </div>
 
         {/* Stats Grid */}

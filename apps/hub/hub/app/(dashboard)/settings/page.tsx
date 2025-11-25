@@ -40,7 +40,7 @@ export default function SettingsPage() {
   const fetchSettings = async () => {
     try {
       const response = await api.get('/settings');
-      setSettings({ ...settings, ...response.data.data });
+      setSettings({ ...settings, ...(response.data as any).data });
     } catch (error) {
       console.error('Failed to fetch settings:', error);
     } finally {

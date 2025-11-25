@@ -87,7 +87,7 @@ export function ChatInterface({ conversationId, initialMessages = [] }: ChatInte
                 <Bot className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-4 text-lg font-medium">Start a conversation</h3>
                 <p className="text-sm text-gray-600">
-                  Ask me anything! I'm here to help.
+                  Ask me anything! I&apos;m here to help.
                 </p>
               </div>
             </div>

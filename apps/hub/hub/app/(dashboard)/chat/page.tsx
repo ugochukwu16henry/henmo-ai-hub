@@ -30,7 +30,7 @@ export default function ChatPage() {
   const fetchConversations = async () => {
     try {
       const response = await api.get('/conversations?limit=50');
-      const convs = response.data.data;
+      const convs = (response.data as any).data;
       setConversations(convs);
       
       // Select first conversation if available
@@ -47,7 +47,7 @@ export default function ChatPage() {
   const fetchMessages = async (conversationId: string) => {
     try {
       const response = await api.get(`/conversations/${conversationId}`);
-      setMessages(response.data.data.messages || []);
+      setMessages((response.data as any).data.messages || []);
     } catch (error) {
       console.error('Failed to fetch messages:', error);
     }
@@ -59,7 +59,7 @@ export default function ChatPage() {
         title: 'New Conversation',
         mode: 'general',
       });
-      const newConv = response.data.data;
+      const newConv = (response.data as any).data;
       setConversations([newConv, ...conversations]);
       setSelectedConversation(newConv.id);
       setMessages([]);
