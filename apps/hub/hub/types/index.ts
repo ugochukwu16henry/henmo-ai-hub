@@ -15,3 +15,13 @@ export interface Conversation {
   created_at: string;
   updated_at: string;
 }
+
+export interface Memory {
+  id: string;
+  title: string;
+  content: string;
+  type: 'note' | 'code';
+  tags?: string[];
+  created_at: string;
+  updated_at: string;
+}
