@@ -18,8 +18,10 @@ import {
   Archive, 
   Trash2,
   MessageSquare,
-  Zap
+  Zap,
+  X
 } from 'lucide-react';
+import { EnhancedChatInterface } from './EnhancedChatInterface';
 import { trackDevelopment } from '@/lib/dev-tracker';
 
 interface Message {
@@ -53,6 +55,7 @@ export function ConversationManager() {
   const [showSettings, setShowSettings] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showTokens, setShowTokens] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [providerFilter, setProviderFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -251,6 +254,17 @@ export function ConversationManager() {
                 
                 <div className="flex gap-2">
                   <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedConversation(conversation);
+                      setShowChat(true);
+                    }}
+                  >
+                    <MessageSquare className="w-4 h-4 mr-1" />
+                    Open
+                  </Button>
+                  <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => {
@@ -333,6 +347,24 @@ export function ConversationManager() {
                 provider={selectedConversation.provider}
                 model={selectedConversation.model}
               />
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {showChat && selectedConversation && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="w-full max-w-7xl max-h-[95vh] overflow-hidden">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>{selectedConversation.title}</CardTitle>
+                <Button variant="ghost" size="sm" onClick={() => setShowChat(false)}>
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0 h-[calc(95vh-5rem)]">
+              <EnhancedChatInterface conversationId={selectedConversation.id} />
             </CardContent>
           </Card>
         </div>

@@ -17,7 +17,8 @@ import {
   Globe,
   LogOut,
   BookOpen,
-  Code2
+  Code2,
+  BarChart3
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 
@@ -32,6 +33,7 @@ const navigation = [
   { name: 'Learning', href: '/learning', icon: BookOpen },
   { name: 'Development', href: '/development', icon: Code2 },
   { name: 'Memory', href: '/memory', icon: Brain },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
