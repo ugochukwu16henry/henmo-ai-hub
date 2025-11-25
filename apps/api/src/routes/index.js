@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const authRoutes = require('./auth.routes');
+const secureAuthRoutes = require('./secure-auth.routes');
 const userRoutes = require('./user.routes');
 const conversationRoutes = require('./conversation.routes');
 const aiRoutes = require('./ai.routes');
@@ -37,6 +38,7 @@ router.get('/', (req, res) => {
       description: 'Enterprise AI Platform API',
       endpoints: {
         auth: '/api/v1/auth',
+        'secure-auth': '/api/v1/secure-auth',
         users: '/api/v1/users',
         conversations: '/api/v1/conversations',
         ai: '/api/v1/ai',
@@ -51,6 +53,7 @@ router.get('/', (req, res) => {
 
 // Mount routes
 router.use('/auth', authRoutes);
+router.use('/secure-auth', secureAuthRoutes);
 router.use('/users', userRoutes);
 router.use('/conversations', conversationRoutes);
 router.use('/ai', aiRoutes);

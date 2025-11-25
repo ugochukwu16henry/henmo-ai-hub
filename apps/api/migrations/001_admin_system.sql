@@ -20,12 +20,20 @@ END $$;
 
 -- Add admin-related columns to users table
 ALTER TABLE users 
+ADD COLUMN IF NOT EXISTS username VARCHAR(50) UNIQUE,
 ADD COLUMN IF NOT EXISTS assigned_country VARCHAR(100),
 ADD COLUMN IF NOT EXISTS invited_by UUID REFERENCES users(id),
 ADD COLUMN IF NOT EXISTS invitation_token VARCHAR(255),
 ADD COLUMN IF NOT EXISTS invitation_expires_at TIMESTAMP WITH TIME ZONE,
 ADD COLUMN IF NOT EXISTS invitation_accepted BOOLEAN DEFAULT FALSE,
-ADD COLUMN IF NOT EXISTS can_invite_others BOOLEAN DEFAULT FALSE;
+ADD COLUMN IF NOT EXISTS can_invite_others BOOLEAN DEFAULT FALSE,
+ADD COLUMN IF NOT EXISTS failed_login_attempts INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS locked_until TIMESTAMP WITH TIME ZONE,
+ADD COLUMN IF NOT EXISTS last_login TIMESTAMP WITH TIME ZONE,
+ADD COLUMN IF NOT EXISTS login_ip VARCHAR(45),
+ADD COLUMN IF NOT EXISTS session_token VARCHAR(255),
+ADD COLUMN IF NOT EXISTS two_factor_secret VARCHAR(32),
+ADD COLUMN IF NOT EXISTS two_factor_enabled BOOLEAN DEFAULT FALSE;
 
 -- Create admin_invitations table
 CREATE TABLE IF NOT EXISTS admin_invitations (
@@ -47,26 +55,30 @@ CREATE INDEX IF NOT EXISTS idx_invitations_email ON admin_invitations(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 CREATE INDEX IF NOT EXISTS idx_users_country ON users(assigned_country);
 
--- Set Henry as Super Admin
+-- Set Henry as Super Admin with secure credentials
 UPDATE users 
 SET 
     role = 'super_admin',
     can_invite_others = TRUE,
-    assigned_country = 'Global'
-WHERE email = 'henryugochukwu@gmail.com' OR name ILIKE '%henry%ugochukwu%';
+    assigned_country = 'Global',
+    username = 'ugochukwuhenry',
+    password = '$2a$12$PGjOKfWpoy80cWbjA1XLIO24SMeEH4pV1ybNQgHOwWrWIxsaFHJzW'
+WHERE email = 'ugochukwuhenry16@gmail.com' OR username = 'ugochukwuhenry';
 
 -- If Henry's account doesn't exist, create it
-INSERT INTO users (id, name, email, role, assigned_country, can_invite_others, created_at)
+INSERT INTO users (id, name, email, username, password, role, assigned_country, can_invite_others, created_at)
 SELECT 
     uuid_generate_v4(),
     'Henry Maobughichi Ugochukwu',
-    'henryugochukwu@gmail.com',
+    'ugochukwuhenry16@gmail.com',
+    'ugochukwuhenry',
+    '$2a$12$PGjOKfWpoy80cWbjA1XLIO24SMeEH4pV1ybNQgHOwWrWIxsaFHJzW',
     'super_admin',
     'Global',
     TRUE,
     NOW()
 WHERE NOT EXISTS (
     SELECT 1 FROM users 
-    WHERE email = 'henryugochukwu@gmail.com' 
-    OR name ILIKE '%henry%ugochukwu%'
+    WHERE email = 'ugochukwuhenry16@gmail.com' 
+    OR username = 'ugochukwuhenry'
 );

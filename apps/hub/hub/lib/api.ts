@@ -7,11 +7,29 @@ const api = axios.create({
   },
 });
 
+// Add auth token to requests
+api.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
+
 // Add request interceptor for better error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     console.error('API Error:', error.response?.data || error.message);
+    
+    // Redirect to login on 401
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
+      localStorage.removeItem('auth_token');
+      window.location.href = '/login';
+    }
+    
     return Promise.reject(error);
   }
 );

@@ -2,9 +2,14 @@ const express = require('express');
 const { body, param, query } = require('express-validator');
 const auth = require('../middleware/auth');
 const validate = require('../middleware/validate');
+const { adminLimiter, checkAdminIP, validateSession } = require('../middleware/security');
 const adminController = require('../controllers/admin.controller');
 
 const router = express.Router();
+
+// Apply security middleware to all admin routes
+router.use(adminLimiter);
+router.use(checkAdminIP);
 
 // Middleware to check admin permissions
 const requireAdmin = (req, res, next) => {
@@ -23,7 +28,7 @@ const requireSuperAdmin = (req, res, next) => {
 
 // Invitation routes
 router.post('/invitations',
-  auth,
+  validateSession,
   requireAdmin,
   [
     body('email').isEmail().normalizeEmail(),
@@ -35,13 +40,13 @@ router.post('/invitations',
 );
 
 router.get('/invitations',
-  auth,
+  validateSession,
   requireAdmin,
   adminController.getInvitations
 );
 
 router.delete('/invitations/:id',
-  auth,
+  validateSession,
   requireAdmin,
   [param('id').isUUID()],
   validate,
@@ -67,7 +72,7 @@ router.post('/accept-invitation',
 
 // User management routes
 router.get('/users',
-  auth,
+  validateSession,
   requireAdmin,
   [
     query('country').optional().isString(),
@@ -80,7 +85,7 @@ router.get('/users',
 );
 
 router.put('/users/:id/role',
-  auth,
+  validateSession,
   requireAdmin,
   [
     param('id').isUUID(),
@@ -91,7 +96,7 @@ router.put('/users/:id/role',
 );
 
 router.put('/users/:id/country',
-  auth,
+  validateSession,
   requireSuperAdmin,
   [
     param('id').isUUID(),
@@ -102,7 +107,7 @@ router.put('/users/:id/country',
 );
 
 router.delete('/users/:id',
-  auth,
+  validateSession,
   requireAdmin,
   [param('id').isUUID()],
   validate,
@@ -111,7 +116,7 @@ router.delete('/users/:id',
 
 // Admin dashboard stats
 router.get('/stats',
-  auth,
+  validateSession,
   requireAdmin,
   adminController.getAdminStats
 );
