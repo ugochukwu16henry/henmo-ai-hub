@@ -12,6 +12,7 @@ import { Plus, Search, FileText, Code, Trash2 } from 'lucide-react';
 import api from '@/lib/api';
 import { Memory } from '@/types';
 import { formatRelativeTime } from '@/lib/utils';
+import { SmartMemoryForm } from '@/components/memory/SmartMemoryForm';
 
 export default function MemoryPage() {
   const [memories, setMemories] = useState<Memory[]>([]);
@@ -122,7 +123,7 @@ export default function MemoryPage() {
 
         {/* Add Memory Form */}
         {showAddForm && (
-          <AddMemoryForm
+          <SmartMemoryForm
             onClose={() => setShowAddForm(false)}
             onAdd={(newMemory) => {
               setMemories([newMemory, ...memories]);
