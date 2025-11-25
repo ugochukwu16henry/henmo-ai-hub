@@ -37,6 +37,7 @@ const navigation = [
 
 const adminNavigation = [
   { name: 'Admin Panel', href: '/admin', icon: Shield },
+  { name: 'Users', href: '/users', icon: Users },
   { name: 'Manage Users', href: '/admin/users', icon: Users },
   { name: 'Invitations', href: '/admin/invitations', icon: UserPlus },
 ];

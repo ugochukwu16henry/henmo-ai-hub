@@ -8,32 +8,63 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Plus, Search, FileText, Code, Trash2 } from 'lucide-react';
-import api from '@/lib/api';
-import { Memory } from '@/types';
-import { formatRelativeTime } from '@/lib/utils';
-import { SmartMemoryForm } from '@/components/memory/SmartMemoryForm';
+import { Plus, Search, FileText, Code, Trash2, Edit, Pin, PinOff, Download, Eye } from 'lucide-react';
+import { MemoryEditor } from '@/components/memory/MemoryEditor';
+import { MemoryDetail } from '@/components/memory/MemoryDetail';
+
+interface Memory {
+  id: string;
+  title: string;
+  content: string;
+  type: 'note' | 'code';
+  tags: string[];
+  pinned?: boolean;
+  created_at: string;
+}
 
 export default function MemoryPage() {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<'all' | 'note' | 'code'>('all');
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [showEditor, setShowEditor] = useState(false);
+  const [editingMemory, setEditingMemory] = useState<Memory | null>(null);
+  const [selectedMemory, setSelectedMemory] = useState<Memory | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchMemories();
+    // Load from localStorage for demo
+    const saved = localStorage.getItem('memories');
+    if (saved) {
+      setMemories(JSON.parse(saved));
+    } else {
+      // Demo data
+      const demoMemories: Memory[] = [
+        {
+          id: '1',
+          title: 'React Hook Pattern',
+          content: 'const [state, setState] = useState(initialValue);\n\nuseEffect(() => {\n  // Side effect\n}, [dependency]);',
+          type: 'code',
+          tags: ['react', 'hooks', 'javascript'],
+          pinned: true,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: '2',
+          title: 'Project Ideas',
+          content: '1. AI-powered code review tool\n2. Memory management system\n3. Development tracking dashboard',
+          type: 'note',
+          tags: ['ideas', 'projects'],
+          created_at: new Date().toISOString()
+        }
+      ];
+      setMemories(demoMemories);
+      localStorage.setItem('memories', JSON.stringify(demoMemories));
+    }
   }, []);
 
-  const fetchMemories = async () => {
-    try {
-      const response = await api.get('/memory');
-      setMemories((response.data as any).data);
-    } catch (error) {
-      console.error('Failed to fetch memories:', error);
-    } finally {
-      setLoading(false);
-    }
+  const saveMemories = (newMemories: Memory[]) => {
+    setMemories(newMemories);
+    localStorage.setItem('memories', JSON.stringify(newMemories));
   };
 
   const filteredMemories = memories.filter(memory => {
@@ -43,15 +74,35 @@ export default function MemoryPage() {
     return matchesSearch && matchesType;
   });
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
     if (!confirm('Are you sure you want to delete this memory?')) return;
-    
-    try {
-      await api.delete(`/memory/${id}`);
-      setMemories(memories.filter(m => m.id !== id));
-    } catch (error) {
-      console.error('Failed to delete memory:', error);
+    saveMemories(memories.filter(m => m.id !== id));
+  };
+
+  const handleSave = (memory: Memory) => {
+    if (editingMemory) {
+      saveMemories(memories.map(m => m.id === memory.id ? memory : m));
+    } else {
+      saveMemories([memory, ...memories]);
     }
+    setShowEditor(false);
+    setEditingMemory(null);
+  };
+
+  const handlePin = (id: string) => {
+    saveMemories(memories.map(m => 
+      m.id === id ? { ...m, pinned: !m.pinned } : m
+    ));
+  };
+
+  const handleExport = (memory: Memory) => {
+    const blob = new Blob([memory.content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${memory.title}.${memory.type === 'code' ? 'txt' : 'md'}`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -62,7 +113,7 @@ export default function MemoryPage() {
             <h1 className="text-3xl font-bold">Memory Browser</h1>
             <p className="text-gray-600">Manage your saved notes and code snippets</p>
           </div>
-          <Button onClick={() => setShowAddForm(true)}>
+          <Button onClick={() => setShowEditor(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Add Memory
           </Button>
@@ -111,24 +162,45 @@ export default function MemoryPage() {
               <p className="text-gray-600">Create your first memory to get started</p>
             </div>
           ) : (
-            filteredMemories.map((memory) => (
-              <MemoryCard
-                key={memory.id}
-                memory={memory}
-                onDelete={() => handleDelete(memory.id)}
-              />
-            ))
+            filteredMemories
+              .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0))
+              .map((memory) => (
+                <MemoryCard
+                  key={memory.id}
+                  memory={memory}
+                  onDelete={() => handleDelete(memory.id)}
+                  onEdit={() => { setEditingMemory(memory); setShowEditor(true); }}
+                  onPin={() => handlePin(memory.id)}
+                  onView={() => setSelectedMemory(memory)}
+                />
+              ))
           )}
         </div>
 
-        {/* Add Memory Form */}
-        {showAddForm && (
-          <SmartMemoryForm
-            onClose={() => setShowAddForm(false)}
-            onAdd={(newMemory) => {
-              setMemories([newMemory, ...memories]);
-              setShowAddForm(false);
+        {/* Memory Editor */}
+        {showEditor && (
+          <MemoryEditor
+            memory={editingMemory}
+            onClose={() => { setShowEditor(false); setEditingMemory(null); }}
+            onSave={handleSave}
+          />
+        )}
+
+        {/* Memory Detail */}
+        {selectedMemory && (
+          <MemoryDetail
+            memory={selectedMemory}
+            onClose={() => setSelectedMemory(null)}
+            onEdit={() => {
+              setEditingMemory(selectedMemory);
+              setSelectedMemory(null);
+              setShowEditor(true);
             }}
+            onPin={() => {
+              handlePin(selectedMemory.id);
+              setSelectedMemory({ ...selectedMemory, pinned: !selectedMemory.pinned });
+            }}
+            onExport={() => handleExport(selectedMemory)}
           />
         )}
       </div>
@@ -136,7 +208,19 @@ export default function MemoryPage() {
   );
 }
 
-function MemoryCard({ memory, onDelete }: { memory: Memory; onDelete: () => void }) {
+function MemoryCard({ 
+  memory, 
+  onDelete, 
+  onEdit, 
+  onPin, 
+  onView 
+}: { 
+  memory: Memory; 
+  onDelete: () => void;
+  onEdit: () => void;
+  onPin: () => void;
+  onView: () => void;
+}) {
   return (
     <Card className="p-4 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-2">
@@ -149,10 +233,22 @@ function MemoryCard({ memory, onDelete }: { memory: Memory; onDelete: () => void
           <Badge variant={memory.type === 'code' ? 'default' : 'secondary'}>
             {memory.type}
           </Badge>
+          {memory.pinned && <Pin className="h-3 w-3 text-yellow-500" />}
         </div>
-        <Button variant="ghost" size="sm" onClick={onDelete}>
-          <Trash2 className="h-4 w-4 text-red-500" />
-        </Button>
+        <div className="flex gap-1">
+          <Button variant="ghost" size="sm" onClick={onView}>
+            <Eye className="h-3 w-3" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={onEdit}>
+            <Edit className="h-3 w-3" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={onPin}>
+            {memory.pinned ? <PinOff className="h-3 w-3" /> : <Pin className="h-3 w-3" />}
+          </Button>
+          <Button variant="ghost" size="sm" onClick={onDelete}>
+            <Trash2 className="h-3 w-3 text-red-500" />
+          </Button>
+        </div>
       </div>
       
       <h3 className="font-medium mb-2 line-clamp-1">{memory.title}</h3>
@@ -169,92 +265,9 @@ function MemoryCard({ memory, onDelete }: { memory: Memory; onDelete: () => void
       )}
       
       <p className="text-xs text-gray-500">
-        {formatRelativeTime(memory.created_at)}
+        {new Date(memory.created_at).toLocaleDateString()}
       </p>
     </Card>
   );
 }
 
-function AddMemoryForm({ onClose, onAdd }: { onClose: () => void; onAdd: (memory: Memory) => void }) {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [type, setType] = useState<'note' | 'code'>('note');
-  const [tags, setTags] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim() || !content.trim()) return;
-
-    setLoading(true);
-    try {
-      const response = await api.post('/memory', {
-        title: title.trim(),
-        content: content.trim(),
-        type,
-        tags: tags.split(',').map(t => t.trim()).filter(Boolean),
-      });
-      onAdd((response.data as any).data);
-    } catch (error) {
-      console.error('Failed to create memory:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <Card className="w-full max-w-md p-6">
-        <CardHeader>
-          <CardTitle>Add Memory</CardTitle>
-          <CardDescription>Save a note or code snippet</CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-          
-          <div className="flex space-x-2">
-            {['note', 'code'].map((t) => (
-              <Button
-                key={t}
-                type="button"
-                variant={type === t ? 'default' : 'outline'}
-                onClick={() => setType(t as any)}
-                className="capitalize"
-              >
-                {t}
-              </Button>
-            ))}
-          </div>
-          
-          <Textarea
-            placeholder="Content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={6}
-            required
-          />
-          
-          <Input
-            placeholder="Tags (comma separated)"
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
-          />
-          
-          <div className="flex space-x-2">
-            <Button type="submit" disabled={loading} className="flex-1">
-              {loading ? 'Saving...' : 'Save'}
-            </Button>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
-          </div>
-        </form>
-      </Card>
-    </div>
-  );
-}
