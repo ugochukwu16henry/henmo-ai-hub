@@ -40,7 +40,7 @@ const secureLogin = async (req, res) => {
     }
     
     // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await bcrypt.compare(password, user.password_hash);
     
     if (!isValidPassword) {
       // Increment failed attempts
@@ -176,8 +176,8 @@ const changePassword = async (req, res) => {
     }
     
     // Verify current password
-    const userResult = await query('SELECT password FROM users WHERE id = $1', [userId]);
-    const isValidPassword = await bcrypt.compare(currentPassword, userResult.rows[0].password);
+    const userResult = await query('SELECT password_hash FROM users WHERE id = $1', [userId]);
+    const isValidPassword = await bcrypt.compare(currentPassword, userResult.rows[0].password_hash);
     
     if (!isValidPassword) {
       return res.status(401).json({ 
@@ -190,7 +190,7 @@ const changePassword = async (req, res) => {
     
     // Update password and invalidate all sessions
     await query(
-      'UPDATE users SET password = $1, session_token = NULL WHERE id = $2',
+      'UPDATE users SET password_hash = $1, session_token = NULL WHERE id = $2',
       [hashedPassword, userId]
     );
     
