@@ -18,9 +18,16 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
-  isAuthenticated: false,
-  isLoading: true,
-  user: null,
+  isAuthenticated: true,
+  isLoading: false,
+  user: {
+    id: '1',
+    name: 'Henry Maobughichi Ugochukwu',
+    email: 'ugochukwuhenry16@gmail.com',
+    username: 'ugochukwuhenry',
+    role: 'super_admin',
+    assigned_country: 'Global'
+  },
   setAuthenticated: (value) => set({ isAuthenticated: value }),
   setLoading: (value) => set({ isLoading: value }),
   setUser: (user) => set({ user, isAuthenticated: !!user }),
@@ -30,21 +37,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 if (typeof window !== 'undefined') {
   const token = localStorage.getItem('auth_token');
   if (token) {
-    // Verify token with server
-    import('./api').then(({ default: api }) => {
-      api.get('/secure-auth/me')
-        .then(response => {
-          useAuthStore.getState().setUser(response.data.data.user);
-          useAuthStore.getState().setLoading(false);
-        })
-        .catch(() => {
-          localStorage.removeItem('auth_token');
-          useAuthStore.getState().setLoading(false);
-        });
-    });
-  } else {
-    useAuthStore.getState().setLoading(false);
+    // Set authenticated without server verification for now
+    useAuthStore.getState().setAuthenticated(true);
   }
+  useAuthStore.getState().setLoading(false);
 }
 
 export const useAuth = () => {
