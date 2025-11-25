@@ -18,7 +18,8 @@ import {
   LogOut,
   BookOpen,
   Code2,
-  BarChart3
+  BarChart3,
+  Camera
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 
@@ -34,6 +35,7 @@ const navigation = [
   { name: 'Development', href: '/development', icon: Code2 },
   { name: 'Memory', href: '/memory', icon: Brain },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'Streets', href: '/streets', icon: Camera },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
