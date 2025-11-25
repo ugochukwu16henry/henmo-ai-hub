@@ -8,8 +8,8 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: false,
-  isLoading: true,
+  isAuthenticated: true, // Set to true for development
+  isLoading: false, // Set to false for development
   setAuthenticated: (value) => set({ isAuthenticated: value }),
   setLoading: (value) => set({ isLoading: value }),
 }));

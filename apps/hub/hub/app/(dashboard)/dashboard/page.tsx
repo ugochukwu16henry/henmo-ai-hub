@@ -33,6 +33,25 @@ export default function DashboardPage() {
         setMemoryStats((memResponse.data as any).data);
       } catch (error) {
         console.error('Failed to fetch stats:', error);
+        // Set mock data when API is unavailable
+        setConversationStats({
+          total_conversations: 0,
+          total_messages: 0,
+          total_tokens: 0,
+          active_conversations: 0,
+          total_memories: 0,
+          notes: 0,
+          code_snippets: 0,
+        });
+        setMemoryStats({
+          total_conversations: 0,
+          total_messages: 0,
+          total_tokens: 0,
+          active_conversations: 0,
+          total_memories: 0,
+          notes: 0,
+          code_snippets: 0,
+        });
       } finally {
         setLoading(false);
       }

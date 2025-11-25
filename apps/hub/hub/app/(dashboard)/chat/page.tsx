@@ -39,6 +39,8 @@ export default function ChatPage() {
       }
     } catch (error) {
       console.error('Failed to fetch conversations:', error);
+      // Set empty array when API is unavailable
+      setConversations([]);
     } finally {
       setLoading(false);
     }
@@ -50,6 +52,8 @@ export default function ChatPage() {
       setMessages((response.data as any).data.messages || []);
     } catch (error) {
       console.error('Failed to fetch messages:', error);
+      // Set empty array when API is unavailable
+      setMessages([]);
     }
   };
 
@@ -65,6 +69,7 @@ export default function ChatPage() {
       setMessages([]);
     } catch (error) {
       console.error('Failed to create conversation:', error);
+      alert('Backend API not available. Please start your backend server.');
     }
   };
 
