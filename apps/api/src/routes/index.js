@@ -6,6 +6,7 @@ const secureAuthRoutes = require('./secure-auth.routes');
 const userRoutes = require('./user.routes');
 const conversationRoutes = require('./conversation.routes');
 const aiRoutes = require('./ai.routes');
+const advancedAIRoutes = require('./advanced-ai.routes');
 const memoryRoutes = require('./memory.routes');
 // const adminRoutes = require('./admin.routes');
 
@@ -42,6 +43,7 @@ router.get('/', (req, res) => {
         users: '/api/v1/users',
         conversations: '/api/v1/conversations',
         ai: '/api/v1/ai',
+        'advanced-ai': '/api/v1/advanced-ai',
         memory: '/api/v1/memory (coming soon)',
         // admin: '/api/v1/admin',
         streets: '/api/v1/streets (coming soon)',
@@ -57,6 +59,7 @@ router.use('/secure-auth', secureAuthRoutes);
 router.use('/users', userRoutes);
 router.use('/conversations', conversationRoutes);
 router.use('/ai', aiRoutes);
+router.use('/advanced-ai', advancedAIRoutes);
 router.use('/memory', memoryRoutes);
 // router.use('/admin', adminRoutes);
 
