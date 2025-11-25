@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
@@ -11,7 +10,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { MessageSquare, Loader2 } from 'lucide-react';
 
 export default function RegisterPage() {
-  const router = useRouter();
   const { register, isLoading, error, clearError } = useAuthStore();
   const [formData, setFormData] = useState({
     name: '',
@@ -21,13 +19,15 @@ export default function RegisterPage() {
     country: 'Nigeria',
     city: '',
   });
+  const [validationError, setValidationError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     clearError();
+    setValidationError('');
 
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
+      setValidationError('Passwords do not match');
       return;
     }
 
@@ -39,9 +39,12 @@ export default function RegisterPage() {
         country: formData.country,
         city: formData.city,
       });
-      router.push('/dashboard');
+      if (typeof window !== 'undefined') {
+        window.location.href = '/dashboard';
+      }
     } catch (err) {
       // Error is handled by the store
+      console.error('Registration error:', err);
     }
   };
 
@@ -57,9 +60,9 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
+            {(error || validationError) && (
               <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
-                {error}
+                {error || validationError}
               </div>
             )}
 
