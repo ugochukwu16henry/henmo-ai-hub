@@ -1,0 +1,67 @@
+{
+  "monitors": [
+    {
+      "name": "Henmo AI Frontend",
+      "url": "https://henmo-ai.com",
+      "type": "http",
+      "interval": 300,
+      "timeout": 30,
+      "retries": 3,
+      "notifications": {
+        "email": ["ugochukwuhenry16@gmail.com"],
+        "slack": true,
+        "discord": true
+      }
+    },
+    {
+      "name": "Henmo AI API",
+      "url": "https://api.henmo-ai.com/health",
+      "type": "http",
+      "interval": 300,
+      "timeout": 30,
+      "retries": 3,
+      "notifications": {
+        "email": ["ugochukwuhenry16@gmail.com"],
+        "slack": true
+      }
+    },
+    {
+      "name": "Database Connection",
+      "url": "https://api.henmo-ai.com/api/health/db",
+      "type": "http",
+      "interval": 600,
+      "timeout": 30,
+      "retries": 2
+    },
+    {
+      "name": "AI Service Health",
+      "url": "https://api.henmo-ai.com/api/health/ai",
+      "type": "http",
+      "interval": 600,
+      "timeout": 45,
+      "retries": 2
+    }
+  ],
+  "alerting": {
+    "email": {
+      "enabled": true,
+      "smtp": {
+        "host": "smtp.gmail.com",
+        "port": 587,
+        "secure": false,
+        "auth": {
+          "user": "ugochukwuhenry16@gmail.com",
+          "pass": "app-password"
+        }
+      }
+    },
+    "slack": {
+      "enabled": true,
+      "webhook": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+    },
+    "discord": {
+      "enabled": true,
+      "webhook": "https://discord.com/api/webhooks/YOUR/DISCORD/WEBHOOK"
+    }
+  }
+}

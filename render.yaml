@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: henmo-ai-api
+    env: node
+    plan: starter
+    buildCommand: cd apps/api && npm ci
+    startCommand: cd apps/api && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: henmo-ai-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ANTHROPIC_API_KEY
+        sync: false
+
+databases:
+  - name: henmo-ai-db
+    databaseName: henmo_ai
+    user: henmo_user
+    plan: starter

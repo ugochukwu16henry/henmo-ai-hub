@@ -21,7 +21,8 @@ import {
   Code2,
   BarChart3,
   Camera,
-  Award
+  Award,
+  DollarSign
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 
@@ -50,6 +51,7 @@ const adminNavigation = [
   { name: 'Users', href: '/users', icon: Users },
   { name: 'Manage Users', href: '/admin/users', icon: Users },
   { name: 'Invitations', href: '/admin/invitations', icon: UserPlus },
+  { name: 'Finance', href: '/finance', icon: DollarSign },
 ];
 
 const DashboardLayout = memo(function DashboardLayout({ children }: DashboardLayoutProps) {
