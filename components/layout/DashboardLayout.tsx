@@ -1,8 +1,9 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, memo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -17,7 +18,12 @@ import {
   Globe,
   LogOut,
   BookOpen,
-  Code2
+  Code2,
+  BarChart3,
+  Camera,
+  Award,
+  DollarSign,
+  FileText
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 
@@ -29,19 +35,32 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'AI Chat', href: '/chat', icon: MessageSquare },
   { name: 'AI Tools', href: '/ai-tools', icon: Brain },
+  { name: 'AI Features', href: '/ai-features', icon: Brain },
+  { name: 'AI Marketplace', href: '/ai-marketplace', icon: Brain },
+  { name: 'Memory', href: '/memory', icon: Brain },
+  { name: 'Collaboration', href: '/collaboration', icon: Users },
   { name: 'Learning', href: '/learning', icon: BookOpen },
   { name: 'Development', href: '/development', icon: Code2 },
-  { name: 'Memory', href: '/memory', icon: Brain },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'Streets', href: '/streets', icon: Camera },
+  { name: 'Contributor', href: '/contributor', icon: Award },
+  { name: 'Plugins', href: '/plugins', icon: Code2 },
+  { name: 'Enterprise', href: '/enterprise', icon: Shield },
+  { name: 'VS Code', href: '/vscode', icon: Code2 },
+  { name: 'Media Studio', href: '/media-studio', icon: Camera },
+  { name: 'Notes', href: '/notes', icon: FileText },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 const adminNavigation = [
+  { name: 'Users', href: '/users', icon: Users },
+  { name: 'Finance', href: '/finance', icon: DollarSign },
+  { name: 'Content', href: '/content', icon: FileText },
+  { name: 'Social Media', href: '/social', icon: Globe },
   { name: 'Admin Panel', href: '/admin', icon: Shield },
-  { name: 'Manage Users', href: '/admin/users', icon: Users },
-  { name: 'Invitations', href: '/admin/invitations', icon: UserPlus },
 ];
 
-export function DashboardLayout({ children }: DashboardLayoutProps) {
+const DashboardLayout = memo(function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
   const { user, logout, isAuthenticated, isLoading } = useAuth();
   
@@ -152,4 +171,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
     </div>
   );
-}
+});
+
+export { DashboardLayout };

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
 
 interface User {
   id: string;
@@ -17,25 +18,33 @@ interface AuthState {
   setUser: (user: User | null) => void;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>()(subscribeWithSelector((set, get) => ({
   isAuthenticated: true,
   isLoading: false,
   user: {
     id: '1',
     name: 'Henry Maobughichi Ugochukwu',
     email: 'ugochukwuhenry16@gmail.com',
-    username: 'ugochukwuhenry',
     role: 'super_admin',
     assigned_country: 'Global'
   },
   setAuthenticated: (value) => set({ isAuthenticated: value }),
   setLoading: (value) => set({ isLoading: value }),
   setUser: (user) => set({ user, isAuthenticated: !!user }),
-}));
+})));
 
-// Initialize auth state
+// Initialize auth state with performance optimization
 if (typeof window !== 'undefined') {
-  useAuthStore.getState().setLoading(false);
+  // Use requestIdleCallback for non-critical initialization
+  const initAuth = () => {
+    useAuthStore.getState().setLoading(false);
+  };
+  
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(initAuth);
+  } else {
+    setTimeout(initAuth, 0);
+  }
 }
 
 export const useAuth = () => {
