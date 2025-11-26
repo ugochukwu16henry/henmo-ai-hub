@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
-const { authenticate } = require('../middleware/auth');
-const { validate } = require('../middleware/validate');
-const { authLimiter } = require('../middleware/rateLimiter');
+const AuthMiddleware = require('../middleware/auth.middleware');
 const {
   registerValidation,
   loginValidation,
@@ -11,33 +9,12 @@ const {
 } = require('../validators/auth.validator');
 
 // Public routes (with rate limiting)
-router.post(
-  '/register',
-  authLimiter,
-  registerValidation,
-  validate,
-  authController.register
-);
-
-router.post(
-  '/login',
-  authLimiter,
-  loginValidation,
-  validate,
-  authController.login
-);
-
-router.post(
-  '/refresh',
-  authLimiter,
-  refreshTokenValidation,
-  validate,
-  authController.refresh
-);
+router.post('/register', AuthMiddleware.authRateLimit, authController.register);
+router.post('/login', AuthMiddleware.authRateLimit, authController.login);
+router.post('/refresh', AuthMiddleware.authRateLimit, authController.refresh);
 
 // Protected routes (require authentication)
-router.get('/me', authenticate, authController.getMe);
-
-router.post('/logout', authenticate, authController.logout);
+router.get('/me', AuthMiddleware.authenticate, authController.getMe);
+router.post('/logout', AuthMiddleware.authenticate, authController.logout);
 
 module.exports = router;

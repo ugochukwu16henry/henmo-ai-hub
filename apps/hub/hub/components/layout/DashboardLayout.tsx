@@ -35,26 +35,29 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'AI Chat', href: '/chat', icon: MessageSquare },
   { name: 'AI Tools', href: '/ai-tools', icon: Brain },
+  { name: 'AI Features', href: '/ai-features', icon: Brain },
+  { name: 'AI Marketplace', href: '/ai-marketplace', icon: Brain },
+  { name: 'Memory', href: '/memory', icon: Brain },
+  { name: 'Collaboration', href: '/collaboration', icon: Users },
   { name: 'Learning', href: '/learning', icon: BookOpen },
   { name: 'Development', href: '/development', icon: Code2 },
-  { name: 'Memory', href: '/memory', icon: Brain },
-  { name: 'Notes & Upgrades', href: '/notes', icon: BookOpen },
-  { name: 'Plugins', href: '/plugins', icon: Code2 },
-  { name: 'VS Code', href: '/vscode', icon: Code2 },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Streets', href: '/streets', icon: Camera },
   { name: 'Contributor', href: '/contributor', icon: Award },
+  { name: 'Plugins', href: '/plugins', icon: Code2 },
+  { name: 'Enterprise', href: '/enterprise', icon: Shield },
+  { name: 'VS Code', href: '/vscode', icon: Code2 },
+  { name: 'Media Studio', href: '/media-studio', icon: Camera },
+  { name: 'Notes', href: '/notes', icon: FileText },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 const adminNavigation = [
-  { name: 'Admin Panel', href: '/admin', icon: Shield },
   { name: 'Users', href: '/users', icon: Users },
-  { name: 'Manage Users', href: '/admin/users', icon: Users },
-  { name: 'Invitations', href: '/admin/invitations', icon: UserPlus },
   { name: 'Finance', href: '/finance', icon: DollarSign },
   { name: 'Content', href: '/content', icon: FileText },
   { name: 'Social Media', href: '/social', icon: Globe },
+  { name: 'Admin Panel', href: '/admin', icon: Shield },
 ];
 
 const DashboardLayout = memo(function DashboardLayout({ children }: DashboardLayoutProps) {

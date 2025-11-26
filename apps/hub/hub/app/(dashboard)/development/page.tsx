@@ -247,7 +247,7 @@ export default function DevelopmentPage() {
                     <Brain className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <div className="font-semibold">March 2024 - Research & Planning</div>
+                    <div className="font-semibold">July 2025 - Research & Planning</div>
                     <div className="text-sm text-gray-600">AI market research, technology evaluation, system architecture design</div>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ export default function DevelopmentPage() {
                     <Shield className="h-6 w-6 text-red-600" />
                   </div>
                   <div>
-                    <div className="font-semibold">April-May 2024 - Security Foundation</div>
+                    <div className="font-semibold">August-September 2025 - Security Foundation</div>
                     <div className="text-sm text-gray-600">Multi-level admin system, secure authentication, role-based access</div>
                   </div>
                 </div>
@@ -265,7 +265,7 @@ export default function DevelopmentPage() {
                     <Brain className="h-6 w-6 text-purple-600" />
                   </div>
                   <div>
-                    <div className="font-semibold">June-July 2024 - Core AI Features</div>
+                    <div className="font-semibold">October-November 2025 - Core AI Features</div>
                     <div className="text-sm text-gray-600">AI integration, memory system, self-learning capabilities</div>
                   </div>
                 </div>
@@ -274,7 +274,7 @@ export default function DevelopmentPage() {
                     <DollarSign className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
-                    <div className="font-semibold">August-September 2024 - Business Features</div>
+                    <div className="font-semibold">December 2025-January 2026 - Business Features</div>
                     <div className="text-sm text-gray-600">Payment systems, financial management, street image platform</div>
                   </div>
                 </div>
@@ -283,7 +283,7 @@ export default function DevelopmentPage() {
                     <Server className="h-6 w-6 text-orange-600" />
                   </div>
                   <div>
-                    <div className="font-semibold">October-November 2024 - Production</div>
+                    <div className="font-semibold">February-March 2026 - Production</div>
                     <div className="text-sm text-gray-600">Docker deployment, CI/CD pipeline, marketing website, launch preparation</div>
                   </div>
                 </div>
@@ -356,9 +356,9 @@ export default function DevelopmentPage() {
               <div className="prose max-w-none">
                 <h3>Built by Henry M. Ugochukwu</h3>
                 <p>
-                  HenMo AI represents 8 months of intensive development, research, and countless sleepless nights. 
-                  What started as a vision for a truly personal AI assistant evolved into a comprehensive platform 
-                  with advanced features and enterprise-grade security.
+                  HenMo AI represents 8 months of intensive development, research, and countless sleepless nights 
+                  from July 2025 to March 2026. What started as a vision for a truly personal AI assistant evolved 
+                  into a comprehensive platform with advanced features and enterprise-grade security.
                 </p>
                 
                 <h4>The Challenge</h4>

@@ -2,6 +2,9 @@ const express = require('express')
 const http = require('http')
 const cors = require('cors')
 const helmet = require('helmet')
+require('dotenv').config()
+
+// Import services and controllers
 const websocketService = require('./services/websocket.service')
 const WebSocketController = require('./controllers/websocket.controller')
 const EmailController = require('./controllers/email.controller')
@@ -18,8 +21,26 @@ const server = http.createServer(app)
 
 // Middleware
 app.use(helmet())
-app.use(cors())
-app.use(express.json())
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true
+}))
+app.use(express.json({ limit: '50mb' }))
+app.use(express.urlencoded({ extended: true, limit: '50mb' }))
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() })
+})
+
+// Import and use route modules
+app.use('/api/auth', require('./routes/auth.routes'))
+app.use('/api/admin', require('./routes/admin.routes'))
+app.use('/api/users', require('./routes/user.routes'))
+app.use('/api/memory', require('./routes/memory.routes'))
+app.use('/api/conversation', require('./routes/conversation.routes'))
+app.use('/api/financial', require('./routes/financial.routes'))
+app.use('/api/content', require('./routes/content.routes'))
 
 // WebSocket routes
 app.get('/api/websocket/online-users', WebSocketController.getOnlineUsers)
@@ -57,6 +78,12 @@ app.delete('/api/upload/:key', AuthMiddleware.authenticate, UploadController.del
 app.get('/api/upload/signed-url/:key', AuthMiddleware.authenticate, UploadController.getSignedUrl)
 app.get('/api/upload/list', AuthMiddleware.authenticate, UploadController.listFiles)
 
+// AI Capabilities routes
+app.use('/api/ai-capabilities', require('./routes/ai-capabilities.routes'))
+
+// Media Generation routes
+app.use('/api/media', require('./routes/media.routes'))
+
 // AI routes
 app.post('/api/ai/stream', AuthMiddleware.authenticate, AIController.streamChat)
 app.post('/api/ai/rag', AuthMiddleware.authenticate, AIController.ragQuery)
@@ -76,15 +103,38 @@ app.get('/api/ai/limits', AuthMiddleware.authenticate, AIController.checkUserLim
 app.get('/api/ai/cost-report', AuthMiddleware.authenticate, AIController.generateCostReport)
 app.post('/api/ai/estimate-cost', AuthMiddleware.authenticate, AIController.estimateCost)
 
-// Initialize WebSocket service
-websocketService.initialize(server)
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err)
+  res.status(500).json({ error: 'Internal server error' })
+})
 
-// Initialize email scheduler
-EmailScheduler.init()
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Route not found' })
+})
+
+// Initialize services
+try {
+  websocketService.initialize(server)
+  EmailScheduler.init()
+  console.log('Services initialized successfully')
+} catch (error) {
+  console.error('Service initialization failed:', error)
+}
 
 const PORT = process.env.PORT || 3001
 
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-  console.log(`WebSocket server initialized`)
+  console.log(`🚀 Server running on port ${PORT}`)
+  console.log(`📡 WebSocket server initialized`)
+  console.log(`🔗 API available at http://localhost:${PORT}/api`)
+})
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully')
+  server.close(() => {
+    console.log('Process terminated')
+  })
 })

@@ -25,7 +25,6 @@ export const useAuthStore = create<AuthState>()(subscribeWithSelector((set, get)
     id: '1',
     name: 'Henry Maobughichi Ugochukwu',
     email: 'ugochukwuhenry16@gmail.com',
-    username: 'ugochukwuhenry',
     role: 'super_admin',
     assigned_country: 'Global'
   },
