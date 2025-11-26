@@ -85,11 +85,11 @@ export const autoTrackNotes = (content: string) => {
 // Auto-track current conversation notes
 if (typeof window !== 'undefined') {
   const currentNotes = `
-    Upgrade to Vercel Pro Plan - Current deployment limit: 100/day. Upgrade for unlimited deployments and multiple regions.
-    Global Performance Optimizations - Implemented: Edge caching, CDN optimization, service worker, lazy loading. Result: 60-80% faster loading globally.
-    Fix TypeScript Strict Mode - Currently disabled for deployment. Re-enable and fix type issues for better code quality.
-    Security Audit - Run npm audit fix for 3 high severity vulnerabilities in dependencies.
-    Notes Tracking System - Automated system to track and update all recommendations, upgrades, and todos.
+    WebSocket for Real-time Features - Real-time typing indicators, live message updates, presence system, and collaborative features.
+    Install WebSocket dependencies (ws, jsonwebtoken) for backend real-time communication.
+    Create WebSocket service with authentication, room management, and message broadcasting.
+    Implement typing indicators and presence system for online/offline status.
+    Add WebSocket client and React hooks for frontend integration.
   `
   
   autoTrackNotes(currentNotes)

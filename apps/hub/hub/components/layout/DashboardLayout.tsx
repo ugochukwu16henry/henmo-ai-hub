@@ -38,6 +38,7 @@ const navigation = [
   { name: 'Memory', href: '/memory', icon: Brain },
   { name: 'Notes & Upgrades', href: '/notes', icon: BookOpen },
   { name: 'Plugins', href: '/plugins', icon: Code2 },
+  { name: 'VS Code', href: '/vscode', icon: Code2 },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Streets', href: '/streets', icon: Camera },
   { name: 'Contributor', href: '/contributor', icon: Award },
