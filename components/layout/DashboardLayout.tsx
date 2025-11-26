@@ -15,7 +15,9 @@ import {
   UserPlus,
   Shield,
   Globe,
-  LogOut
+  LogOut,
+  BookOpen,
+  Code2
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 
@@ -26,6 +28,9 @@ interface DashboardLayoutProps {
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'AI Chat', href: '/chat', icon: MessageSquare },
+  { name: 'AI Tools', href: '/ai-tools', icon: Brain },
+  { name: 'Learning', href: '/learning', icon: BookOpen },
+  { name: 'Development', href: '/development', icon: Code2 },
   { name: 'Memory', href: '/memory', icon: Brain },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];

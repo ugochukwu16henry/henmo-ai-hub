@@ -33,13 +33,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   setUser: (user) => set({ user, isAuthenticated: !!user }),
 }));
 
-// Initialize auth state from localStorage
+// Initialize auth state
 if (typeof window !== 'undefined') {
-  const token = localStorage.getItem('auth_token');
-  if (token) {
-    // Set authenticated without server verification for now
-    useAuthStore.getState().setAuthenticated(true);
-  }
   useAuthStore.getState().setLoading(false);
 }
 
@@ -47,7 +42,6 @@ export const useAuth = () => {
   const { isAuthenticated, isLoading, user, setAuthenticated, setLoading, setUser } = useAuthStore();
   
   const logout = () => {
-    localStorage.removeItem('auth_token');
     setUser(null);
     setAuthenticated(false);
     window.location.href = '/login';
