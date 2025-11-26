@@ -1,7 +1,13 @@
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
+import { initGlobalPerformance, optimizeForRegion } from '@/lib/global-performance';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    initGlobalPerformance()
+    optimizeForRegion()
+  }, [])
+
   return (
     <DashboardLayout>
       <Suspense fallback={

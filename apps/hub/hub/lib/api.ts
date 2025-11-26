@@ -1,37 +1,48 @@
-import axios from 'axios';
+// Lightweight API client
+class ApiClient {
+  private baseURL = process.env.NEXT_PUBLIC_API_URL || '/api';
+  
+  private async request(endpoint: string, options: RequestInit = {}) {
+    const url = `${this.baseURL}${endpoint}`;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    };
 
-const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Add auth token to requests
-api.interceptors.request.use((config) => {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const response = await fetch(url, config);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
     }
   }
-  return config;
-});
 
-// Add request interceptor for better error handling
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    console.error('API Error:', error.response?.data || error.message);
-    
-    // Redirect to login on 401
-    if (error.response?.status === 401 && typeof window !== 'undefined') {
-      localStorage.removeItem('auth_token');
-      window.location.href = '/login';
-    }
-    
-    return Promise.reject(error);
+  get(endpoint: string) {
+    return this.request(endpoint);
   }
-);
 
-export default api;
+  post(endpoint: string, data?: any) {
+    return this.request(endpoint, {
+      method: 'POST',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  put(endpoint: string, data?: any) {
+    return this.request(endpoint, {
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  delete(endpoint: string) {
+    return this.request(endpoint, { method: 'DELETE' });
+  }
+}
+
+export default new ApiClient();
