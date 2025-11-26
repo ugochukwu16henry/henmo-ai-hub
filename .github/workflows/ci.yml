@@ -1,0 +1,100 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test-api:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: henmo_ai_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: apps/api/package-lock.json
+
+      - name: Install API dependencies
+        run: cd apps/api && npm ci
+
+      - name: Run database migrations
+        run: cd apps/api && npm run migrate
+        env:
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/henmo_ai_test
+
+      - name: Run API tests
+        run: cd apps/api && npm test
+        env:
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/henmo_ai_test
+          JWT_SECRET: test-secret
+          NODE_ENV: test
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: apps/hub/hub/package-lock.json
+
+      - name: Install frontend dependencies
+        run: cd apps/hub/hub && npm ci
+
+      - name: Run type check
+        run: cd apps/hub/hub && npm run type-check
+
+      - name: Run linting
+        run: cd apps/hub/hub && npm run lint
+
+      - name: Run frontend tests
+        run: cd apps/hub/hub && npm test
+
+      - name: Build frontend
+        run: cd apps/hub/hub && npm run build
+
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          cd apps/api && npm ci
+          cd ../hub/hub && npm ci
+
+      - name: Run ESLint
+        run: |
+          cd apps/api && npm run lint
+          cd ../hub/hub && npm run lint
+
+      - name: Run Prettier check
+        run: |
+          cd apps/api && npm run format:check
+          cd ../hub/hub && npm run format:check
+
+      - name: Security audit
+        run: |
+          cd apps/api && npm audit --audit-level moderate
+          cd ../hub/hub && npm audit --audit-level moderate

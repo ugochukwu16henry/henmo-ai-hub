@@ -11,6 +11,7 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
+  output: 'standalone',
   images: {
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 31536000,

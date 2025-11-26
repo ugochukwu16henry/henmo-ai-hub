@@ -85,11 +85,12 @@ export const autoTrackNotes = (content: string) => {
 // Auto-track current conversation notes
 if (typeof window !== 'undefined') {
   const currentNotes = `
-    WebSocket for Real-time Features - Real-time typing indicators, live message updates, presence system, and collaborative features.
-    Install WebSocket dependencies (ws, jsonwebtoken) for backend real-time communication.
-    Create WebSocket service with authentication, room management, and message broadcasting.
-    Implement typing indicators and presence system for online/offline status.
-    Add WebSocket client and React hooks for frontend integration.
+    Production Deployment - Docker setup with Dockerfile for API and Hub, docker-compose.yml for local development, production docker-compose with PostgreSQL and Redis.
+    Configure Docker containers with multi-stage builds for optimization.
+    Set up nginx reverse proxy with SSL termination.
+    Create deployment and backup scripts for production.
+    Add standalone Next.js output for Docker deployment.
+    Configure environment variables for production deployment.
   `
   
   autoTrackNotes(currentNotes)
