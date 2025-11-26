@@ -180,7 +180,7 @@ export default function MemoryPage() {
         {/* Memory Editor */}
         {showEditor && (
           <MemoryEditor
-            memory={editingMemory}
+            memory={editingMemory || undefined}
             onClose={() => { setShowEditor(false); setEditingMemory(null); }}
             onSave={handleSave}
           />

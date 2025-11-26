@@ -325,7 +325,7 @@ export function ConversationManager() {
 
       {showExport && selectedConversation && (
         <ConversationExport
-          conversation={selectedConversation}
+          conversation={selectedConversation as any}
           onClose={() => setShowExport(false)}
         />
       )}

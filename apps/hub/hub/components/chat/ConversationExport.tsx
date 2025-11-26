@@ -182,7 +182,7 @@ export function ConversationExport({ conversation, onClose }: ConversationExport
               <Checkbox
                 id="metadata"
                 checked={includeMetadata}
-                onCheckedChange={setIncludeMetadata}
+                onCheckedChange={(checked) => setIncludeMetadata(checked === true)}
               />
               <label htmlFor="metadata" className="text-sm">
                 Include metadata (provider, model, stats)
@@ -193,7 +193,7 @@ export function ConversationExport({ conversation, onClose }: ConversationExport
               <Checkbox
                 id="timestamps"
                 checked={includeTimestamps}
-                onCheckedChange={setIncludeTimestamps}
+                onCheckedChange={(checked) => setIncludeTimestamps(checked === true)}
               />
               <label htmlFor="timestamps" className="text-sm">
                 Include timestamps

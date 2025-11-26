@@ -1,3 +1,5 @@
+'use client'
+
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Suspense, useEffect } from 'react';
 import { initGlobalPerformance, optimizeForRegion } from '@/lib/global-performance';
