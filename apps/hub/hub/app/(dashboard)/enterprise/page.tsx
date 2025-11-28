@@ -1,19 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Shield, Key, FileText, Clock, Users, Building, Settings, CheckCircle } from 'lucide-react';
+import { Shield, Key, FileText, Clock, Users, Building, CheckCircle } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+
+const auditLogsData = [
+  { id: '1', action: 'User Login', user: 'john.doe@company.com', timestamp: '2026-03-15 09:30:00', ip: '192.168.1.100' },
+  { id: '2', action: 'Model Access', user: 'jane.smith@company.com', timestamp: '2026-03-15 09:25:00', ip: '192.168.1.101' },
+  { id: '3', action: 'Data Export', user: 'admin@company.com', timestamp: '2026-03-15 09:20:00', ip: '192.168.1.102' }
+];
 
 export default function EnterprisePage() {
   const [ssoEnabled, setSsoEnabled] = useState(false);
-  const [auditLogs] = useState([
-    { id: '1', action: 'User Login', user: 'john.doe@company.com', timestamp: '2026-03-15 09:30:00', ip: '192.168.1.100' },
-    { id: '2', action: 'Model Access', user: 'jane.smith@company.com', timestamp: '2026-03-15 09:25:00', ip: '192.168.1.101' },
-    { id: '3', action: 'Data Export', user: 'admin@company.com', timestamp: '2026-03-15 09:20:00', ip: '192.168.1.102' }
-  ]);
+  // The auditLogs state is constant, so it can be derived directly from auditLogsData.
+  // If you plan to fetch or modify this data, you can move it back to a useState hook.
+  const auditLogs = auditLogsData;
 
   return (
     <div className="space-y-6">
@@ -156,7 +162,7 @@ export default function EnterprisePage() {
                     <span>Timestamp</span>
                     <span>IP Address</span>
                   </div>
-                  {auditLogs.map((log) => (
+                  {auditLogsData.map((log) => (
                     <div key={log.id} className="grid grid-cols-4 gap-4 p-3 border-t text-sm">
                       <span>{log.action}</span>
                       <span>{log.user}</span>
@@ -243,28 +249,28 @@ export default function EnterprisePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium">Company Name</label>
-                      <input className="w-full mt-1 p-2 border rounded" placeholder="Your Company Name" />
+                      <Label htmlFor="company-name">Company Name</Label>
+                      <Input id="company-name" placeholder="Your Company Name" />
                     </div>
                     <div>
-                      <label className="text-sm font-medium">Custom Domain</label>
-                      <input className="w-full mt-1 p-2 border rounded" placeholder="ai.yourcompany.com" />
+                      <Label htmlFor="custom-domain">Custom Domain</Label>
+                      <Input id="custom-domain" placeholder="ai.yourcompany.com" />
                     </div>
                     <div>
-                      <label className="text-sm font-medium">Support Email</label>
-                      <input className="w-full mt-1 p-2 border rounded" placeholder="support@yourcompany.com" />
+                      <Label htmlFor="support-email">Support Email</Label>
+                      <Input id="support-email" type="email" placeholder="support@yourcompany.com" />
                     </div>
                   </div>
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium">Logo Upload</label>
+                      <Label>Logo Upload</Label>
                       <div className="mt-1 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                         <span className="text-gray-500">Drop logo here or click to upload</span>
                       </div>
                     </div>
                     <div>
-                      <label className="text-sm font-medium">Primary Color</label>
-                      <input type="color" className="w-full mt-1 h-10 border rounded" defaultValue="#3b82f6" />
+                      <Label htmlFor="primary-color">Primary Color</Label>
+                      <Input id="primary-color" type="color" className="w-full h-10" defaultValue="#3b82f6" aria-label="Primary color picker" />
                     </div>
                   </div>
                 </div>
