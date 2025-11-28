@@ -4,11 +4,23 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts']
   },
+  turbopack: {
+    root: __dirname
+  },
   images: {
-    domains: [
-      'localhost',
-      'henmo-ai-files-production.s3.amazonaws.com',
-      'your-cloudfront-domain.cloudfront.net'
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost'
+      },
+      {
+        protocol: 'https',
+        hostname: 'henmo-ai-files-production.s3.amazonaws.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'your-cloudfront-domain.cloudfront.net'
+      }
     ],
     formats: ['image/webp', 'image/avif']
   },
