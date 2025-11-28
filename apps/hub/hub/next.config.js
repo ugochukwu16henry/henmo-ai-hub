@@ -1,11 +1,10 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts']
-  },
-  turbopack: {
-    root: __dirname
   },
   images: {
     remotePatterns: [
