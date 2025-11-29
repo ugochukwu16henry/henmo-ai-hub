@@ -2,25 +2,12 @@
 const nextConfig = {
   output: 'standalone',
   basePath: '/hub',
-  appDir: true,
-  dir: './',
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts'],
+    appDir: 'app',
+    // This tells Turbopack/Next.js where to look for the monorepo root
     turbopack: {
-      root: './',
-      rules: {
-        '*.{js,jsx,ts,tsx}': {
-          loaders: [
-            {
-              loader: '@next/swc-loader',
-              options: {
-                isDevelopment: true,
-                baseDirectory: 'C:/Users/user/Documents/henmo-AI/henmo-ai/apps/hub',
-              },
-            },
-          ],
-        },
-      },
+      root: '../../',
     },
   },
   distDir: '.next',
