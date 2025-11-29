@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  basePath: '/hub',
+  appDir: true,
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts'],
     turbopack: {
@@ -19,6 +21,11 @@ const nextConfig = {
         },
       },
     },
+  },
+  distDir: '.next',
+  webpack: (config, { isServer }) => {
+    config.resolve.alias['@'] = path.resolve(__dirname, './');
+    return config;
   },
   images: {
     remotePatterns: [
