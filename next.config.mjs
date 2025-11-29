@@ -4,7 +4,7 @@ const nextConfig = {
   basePath: '/hub',
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts'],
-    appDir: 'apps/hub/app',
+    appDir: 'app',
     // This tells Turbopack/Next.js where to look for the monorepo root
     turbopack: {
       root: '../../',
