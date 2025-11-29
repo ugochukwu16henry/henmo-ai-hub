@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  basePath: '/hub',
+  appDir: true,
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts'],
     turbopack: {
+      root: './',
       rules: {
         '*.{js,jsx,ts,tsx}': {
           loaders: [
@@ -11,13 +14,18 @@ const nextConfig = {
               loader: '@next/swc-loader',
               options: {
                 isDevelopment: true,
-                baseDirectory: '../../',
+                baseDirectory: 'C:/Users/user/Documents/henmo-AI/henmo-ai/apps/hub',
               },
             },
           ],
         },
       },
     },
+  },
+  distDir: '.next',
+  webpack: (config, { isServer }) => {
+    config.resolve.alias['@'] = path.resolve(__dirname, './');
+    return config;
   },
   images: {
     remotePatterns: [
