@@ -3,6 +3,7 @@ const nextConfig = {
   output: 'standalone',
   basePath: '/hub',
   appDir: true,
+  dir: './',
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts'],
     turbopack: {
