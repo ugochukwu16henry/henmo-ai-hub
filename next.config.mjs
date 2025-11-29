@@ -2,7 +2,22 @@
 const nextConfig = {
   output: 'standalone',
   experimental: {
-    optimizePackageImports: ['lucide-react', 'recharts']
+    optimizePackageImports: ['lucide-react', 'recharts'],
+    turbopack: {
+      rules: {
+        '*.{js,jsx,ts,tsx}': {
+          loaders: [
+            {
+              loader: '@next/swc-loader',
+              options: {
+                isDevelopment: true,
+                baseDirectory: '../../',
+              },
+            },
+          ],
+        },
+      },
+    },
   },
   images: {
     remotePatterns: [

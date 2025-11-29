@@ -9,15 +9,7 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "docker:build": "docker build -t henmo-ai-hub .",
-    "docker:run": "docker run -p 3000:3000 henmo-ai-hub"
-  },
-  "dependencies": {
+    "test": "jest",up
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.1.0",
     "@sentry/nextjs": "^7.81.1",
