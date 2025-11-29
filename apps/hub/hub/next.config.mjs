@@ -4,6 +4,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts'],
     turbopack: {
+      root: './',
       rules: {
         '*.{js,jsx,ts,tsx}': {
           loaders: [
@@ -11,7 +12,7 @@ const nextConfig = {
               loader: '@next/swc-loader',
               options: {
                 isDevelopment: true,
-                baseDirectory: '../../',
+                baseDirectory: 'C:/Users/user/Documents/henmo-AI/henmo-ai/apps/hub',
               },
             },
           ],
