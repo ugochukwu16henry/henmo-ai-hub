@@ -1,8 +1,19 @@
-const cron = require('node-cron')
+let cron = null;
+try {
+  cron = require('node-cron');
+} catch (error) {
+  console.warn('node-cron not available - email scheduling disabled');
+}
+
 const emailService = require('../services/email.service')
 
 class EmailScheduler {
   static init() {
+    if (!cron) {
+      console.warn('Email scheduler disabled - node-cron not available');
+      return;
+    }
+
     // Weekly digest - Every Sunday at 9 AM
     cron.schedule('0 9 * * 0', async () => {
       console.log('Sending weekly digests...')

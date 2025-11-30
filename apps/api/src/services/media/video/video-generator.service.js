@@ -2,7 +2,12 @@ const ffmpeg = require('fluent-ffmpeg');
 const path = require('path');
 const fs = require('fs').promises;
 const puppeteer = require('puppeteer');
-const { createCanvas, loadImage } = require('canvas');
+let canvas = null;
+try {
+  canvas = require('canvas');
+} catch (error) {
+  console.warn('canvas module not available - video generation features disabled');
+}
 
 class VideoGeneratorService {
   constructor() {
@@ -197,8 +202,11 @@ class VideoGeneratorService {
   }
 
   async generateFrame(sceneType, content, frameIndex, totalFrames, outputPath) {
-    const canvas = createCanvas(1920, 1080);
-    const ctx = canvas.getContext('2d');
+    if (!canvas) {
+      throw new Error('Canvas module not available');
+    }
+    const canvasInstance = canvas.createCanvas(1920, 1080);
+    const ctx = canvasInstance.getContext('2d');
     
     // Background gradient
     const gradient = ctx.createLinearGradient(0, 0, 1920, 1080);
@@ -244,7 +252,7 @@ class VideoGeneratorService {
     await this.addWatermark(ctx);
     
     // Save frame
-    const buffer = canvas.toBuffer('image/png');
+    const buffer = canvasInstance.toBuffer('image/png');
     await fs.writeFile(outputPath, buffer);
   }
 

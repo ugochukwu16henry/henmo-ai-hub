@@ -1,4 +1,9 @@
-const { createCanvas, loadImage, registerFont } = require('canvas');
+let canvas = null;
+try {
+  canvas = require('canvas');
+} catch (error) {
+  console.warn('canvas module not available - image generation features disabled');
+}
 const fs = require('fs').promises;
 const path = require('path');
 const { Anthropic } = require('@anthropic-ai/sdk');
@@ -32,9 +37,12 @@ class ImageGeneratorService {
     } = options;
 
     try {
+      if (!canvas) {
+        throw new Error('Canvas module not available');
+      }
       const imageId = `img_${Date.now()}`;
-      const canvas = createCanvas(width, height);
-      const ctx = canvas.getContext('2d');
+      const canvasInstance = canvas.createCanvas(width, height);
+      const ctx = canvasInstance.getContext('2d');
 
       // Generate base image based on prompt
       await this.drawGeneratedContent(ctx, prompt, style, width, height);
@@ -46,7 +54,7 @@ class ImageGeneratorService {
 
       // Save image
       const outputPath = path.join(this.outputDir, `${imageId}.${format}`);
-      const buffer = canvas.toBuffer(`image/${format}`);
+      const buffer = canvasInstance.toBuffer(`image/${format}`);
       await fs.writeFile(outputPath, buffer);
 
       return {
@@ -71,8 +79,11 @@ class ImageGeneratorService {
       colorScheme = 'blue'
     } = options;
 
-    const canvas = createCanvas(1200, 800);
-    const ctx = canvas.getContext('2d');
+    if (!canvas) {
+      throw new Error('Canvas module not available');
+    }
+    const canvasInstance = canvas.createCanvas(1200, 800);
+    const ctx = canvasInstance.getContext('2d');
 
     switch (type) {
       case 'logo':
@@ -93,7 +104,7 @@ class ImageGeneratorService {
 
     const imageId = `branding_${type}_${Date.now()}`;
     const outputPath = path.join(this.outputDir, `${imageId}.png`);
-    const buffer = canvas.toBuffer('image/png');
+    const buffer = canvasInstance.toBuffer('image/png');
     await fs.writeFile(outputPath, buffer);
 
     return {
@@ -108,8 +119,11 @@ class ImageGeneratorService {
   }
 
   async generateProductScreenshot(pageType, data = {}) {
-    const canvas = createCanvas(1920, 1080);
-    const ctx = canvas.getContext('2d');
+    if (!canvas) {
+      throw new Error('Canvas module not available');
+    }
+    const canvasInstance = canvas.createCanvas(1920, 1080);
+    const ctx = canvasInstance.getContext('2d');
 
     // Background
     const gradient = ctx.createLinearGradient(0, 0, 1920, 1080);
@@ -137,7 +151,7 @@ class ImageGeneratorService {
 
     const imageId = `screenshot_${pageType}_${Date.now()}`;
     const outputPath = path.join(this.outputDir, `${imageId}.png`);
-    const buffer = canvas.toBuffer('image/png');
+    const buffer = canvasInstance.toBuffer('image/png');
     await fs.writeFile(outputPath, buffer);
 
     return {

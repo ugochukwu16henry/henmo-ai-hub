@@ -1,11 +1,22 @@
 const { OpenAI } = require('openai')
-const { Pinecone } = require('@pinecone-database/pinecone')
+let Pinecone = null;
+try {
+  Pinecone = require('@pinecone-database/pinecone').Pinecone;
+} catch (error) {
+  console.warn('@pinecone-database/pinecone not available - embeddings features disabled');
+}
 
 class EmbeddingsService {
   constructor() {
     this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-    this.pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
-    this.index = this.pinecone.index('henmo-embeddings')
+    if (Pinecone && process.env.PINECONE_API_KEY) {
+      this.pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
+      this.index = this.pinecone.index('henmo-embeddings')
+    } else {
+      this.pinecone = null;
+      this.index = null;
+      console.warn('Pinecone not configured - vector search disabled');
+    }
   }
 
   async createEmbedding(text) {
@@ -22,6 +33,9 @@ class EmbeddingsService {
 
   async storeEmbedding(id, text, metadata = {}) {
     try {
+      if (!this.index) {
+        return { success: false, error: 'Pinecone not configured' }
+      }
       const embedding = await this.createEmbedding(text)
       
       await this.index.upsert([{
@@ -38,6 +52,9 @@ class EmbeddingsService {
 
   async searchSimilar(query, topK = 5, filter = {}) {
     try {
+      if (!this.index) {
+        return { success: false, error: 'Pinecone not configured', matches: [] }
+      }
       const queryEmbedding = await this.createEmbedding(query)
       
       const searchResponse = await this.index.query({
@@ -57,7 +74,7 @@ class EmbeddingsService {
         }))
       }
     } catch (error) {
-      return { success: false, error: error.message }
+      return { success: false, error: error.message, matches: [] }
     }
   }
 
@@ -133,6 +150,9 @@ Please answer the question based on the context provided. If the context doesn't
 
   async deleteEmbedding(id) {
     try {
+      if (!this.index) {
+        return { success: false, error: 'Pinecone not configured' }
+      }
       await this.index.deleteOne(id)
       return { success: true }
     } catch (error) {

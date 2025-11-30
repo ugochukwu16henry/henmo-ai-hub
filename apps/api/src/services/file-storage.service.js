@@ -1,13 +1,17 @@
-const AWS = require('aws-sdk')
+const { S3Client, PutObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3')
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
+const { GetObjectCommand } = require('@aws-sdk/client-s3')
 const multer = require('multer')
 const path = require('path')
 
 class FileStorageService {
   constructor() {
-    this.s3 = new AWS.S3({
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      region: process.env.AWS_REGION || 'us-east-1'
+    this.s3Client = new S3Client({
+      region: process.env.AWS_REGION || 'us-east-1',
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ''
+      }
     })
     
     this.bucket = process.env.S3_BUCKET_NAME || 'henmo-ai-uploads'
@@ -35,20 +39,23 @@ class FileStorageService {
     try {
       const key = `${folder}/${Date.now()}-${file.originalname}`
       
-      const params = {
+      const command = new PutObjectCommand({
         Bucket: this.bucket,
         Key: key,
         Body: file.buffer,
         ContentType: file.mimetype,
         ACL: 'public-read'
-      }
+      })
 
-      const result = await this.s3.upload(params).promise()
+      await this.s3Client.send(command)
+      
+      // Construct the public URL
+      const url = `https://${this.bucket}.s3.${process.env.AWS_REGION || 'us-east-1'}.amazonaws.com/${key}`
       
       return {
         success: true,
-        url: result.Location,
-        key: result.Key,
+        url: url,
+        key: key,
         size: file.size
       }
     } catch (error) {
@@ -58,10 +65,12 @@ class FileStorageService {
 
   async deleteFile(key) {
     try {
-      await this.s3.deleteObject({
+      const command = new DeleteObjectCommand({
         Bucket: this.bucket,
         Key: key
-      }).promise()
+      })
+      
+      await this.s3Client.send(command)
       
       return { success: true }
     } catch (error) {
@@ -71,11 +80,12 @@ class FileStorageService {
 
   async getSignedUrl(key, expires = 3600) {
     try {
-      const url = await this.s3.getSignedUrlPromise('getObject', {
+      const command = new GetObjectCommand({
         Bucket: this.bucket,
-        Key: key,
-        Expires: expires
+        Key: key
       })
+      
+      const url = await getSignedUrl(this.s3Client, command, { expiresIn: expires })
       
       return { success: true, url }
     } catch (error) {
@@ -85,19 +95,19 @@ class FileStorageService {
 
   async listFiles(folder = 'uploads', maxKeys = 100) {
     try {
-      const params = {
+      const command = new ListObjectsV2Command({
         Bucket: this.bucket,
         Prefix: folder,
         MaxKeys: maxKeys
-      }
+      })
 
-      const result = await this.s3.listObjectsV2(params).promise()
+      const result = await this.s3Client.send(command)
       
-      const files = result.Contents.map(obj => ({
+      const files = (result.Contents || []).map(obj => ({
         key: obj.Key,
         size: obj.Size,
         lastModified: obj.LastModified,
-        url: `https://${this.bucket}.s3.amazonaws.com/${obj.Key}`
+        url: `https://${this.bucket}.s3.${process.env.AWS_REGION || 'us-east-1'}.amazonaws.com/${obj.Key}`
       }))
 
       return { success: true, files }

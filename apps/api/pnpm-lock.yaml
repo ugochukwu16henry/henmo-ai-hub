@@ -1,0 +1,61 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .: {}
+
+  ../..: {}
+
+  ../../../../CSE341_finalproject: {}
+
+  ../../../../HenMo_AI/henmo-chatboss: {}
+
+  ../../../../My Pictures/cse341-ww-student-code-w02-2-team-complete: {}
+
+  ../../../../REST API: {}
+
+  ../../../../RESTful-APIs: {}
+
+  ../../../../byu-cse-wdd330-sleepoutside-team10: {}
+
+  ../../../../cse-341-project1: {}
+
+  ../../../../cse340 Web Backend/sample: {}
+
+  ../../../../cse340projects: {}
+
+  ../../../../cse340projects/byui-wdd-340: {}
+
+  ../../../../cse341-node: {}
+
+  ../../../../cse341-ww-student-code: {}
+
+  ../../../../cse341-ww-student-code-w02-2-team-complete: {}
+
+  ../../../../cse341-ww-student-code-w02-2-team-start: {}
+
+  ../../../../mkdir todoListApi: {}
+
+  ../../../../playgroundTerm6: {}
+
+  ../../packages/database: {}
+
+  ../hub/henmo ai: {}
+
+  ../hub/henmo ai/apps/web: {}
+
+  ../hub/henmo ai/packages/eslint-config: {}
+
+  ../hub/henmo ai/packages/typescript-config: {}
+
+  ../hub/henmo ai/packages/ui: {}
+
+  ../hub/hub: {}
+
+  ../mobile: {}
+
+  ../web: {}

@@ -1,31 +1,32 @@
 const express = require('express');
 const financialController = require('../controllers/financial.controller');
 const paymentProcessors = require('../services/payment-processors');
-const { authenticateToken, requireRole } = require('../middleware/auth');
+const { authenticate, requireRole } = require('../middleware/auth');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const router = express.Router();
 
 // Financial Dashboard (Admin only)
-router.get('/dashboard', authenticateToken, requireRole(['super_admin', 'admin']), financialController.getDashboard);
+router.get('/dashboard', authenticate, requireRole('super_admin', 'admin'), financialController.getDashboard);
 
 // Wallet Management
-router.get('/wallet', authenticateToken, requireRole(['super_admin', 'admin']), financialController.getWallet);
+router.get('/wallet', authenticate, requireRole('super_admin', 'admin'), financialController.getWallet);
 
 // Revenue Reports
-router.get('/revenue', authenticateToken, requireRole(['super_admin', 'admin']), financialController.getRevenueReport);
+router.get('/revenue', authenticate, requireRole('super_admin', 'admin'), financialController.getRevenueReport);
 
 // Expense Reports
-router.get('/expenses', authenticateToken, requireRole(['super_admin', 'admin']), financialController.getProfitLoss);
+router.get('/expenses', authenticate, requireRole('super_admin', 'admin'), financialController.getProfitLoss);
 
 // Cash Flow Reports
-router.get('/cashflow', authenticateToken, requireRole(['super_admin', 'admin']), financialController.getCashFlow);
+router.get('/cashflow', authenticate, requireRole('super_admin', 'admin'), financialController.getCashFlow);
 
 // Payment Processing
-router.post('/payment/stripe', authenticateToken, financialController.processSubscription);
-router.post('/payout/contributor', authenticateToken, requireRole(['super_admin', 'admin']), financialController.processContributorPayout);
+router.post('/payment/stripe', authenticate, financialController.processSubscription);
+router.post('/payout/contributor', authenticate, requireRole('super_admin', 'admin'), financialController.processContributorPayout);
 
 // Payroll Processing
-router.post('/payroll', authenticateToken, requireRole(['super_admin']), financialController.processPayroll);
+router.post('/payroll', authenticate, requireRole('super_admin'), financialController.processPayroll);
 
 // Webhook Endpoints
 router.post('/webhook/stripe', express.raw({type: 'application/json'}), async (req, res) => {

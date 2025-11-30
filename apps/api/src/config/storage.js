@@ -1,28 +1,24 @@
-const AWS = require('aws-sdk');
 const multer = require('multer');
-const multerS3 = require('multer-s3');
 
-// Configure AWS
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION || 'us-east-1'
-});
-
-// S3 upload configuration
+// Note: multer-s3 doesn't support AWS SDK v3
+// Using memory storage instead - files will be uploaded via file-storage.service.js
+// This is more compatible with AWS SDK v3
 const s3Upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: process.env.S3_BUCKET_NAME,
-    key: function (req, file, cb) {
-      const folder = req.params.folder || 'uploads';
-      const filename = `${folder}/${Date.now()}-${file.originalname}`;
-      cb(null, filename);
-    },
-    contentType: multerS3.AUTO_CONTENT_TYPE
-  }),
+  storage: multer.memoryStorage(),
   limits: {
     fileSize: 10 * 1024 * 1024 // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    // Allow common file types
+    const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx|txt|zip|mp4|mov/;
+    const extname = allowedTypes.test(file.originalname.toLowerCase().split('.').pop());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type'));
+    }
   }
 });
 
