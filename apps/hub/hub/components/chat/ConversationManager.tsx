@@ -177,7 +177,7 @@ export function ConversationManager() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Conversations</h1>
-          <p className="text-gray-600">Manage and analyze your AI conversations</p>
+          <p className="text-muted-foreground">Manage and analyze your AI conversations</p>
         </div>
       </div>
 
@@ -238,7 +238,7 @@ export function ConversationManager() {
                     )}
                   </div>
                   
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <MessageSquare className="w-4 h-4" />
                       {conversation.messages.length} messages
