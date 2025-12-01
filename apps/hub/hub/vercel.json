@@ -1,9 +1,9 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "pnpm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "installCommand": "npm ci",
-  "devCommand": "npm run dev",
+  "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
+  "devCommand": "pnpm run dev",
   "rewrites": [
     {
       "source": "/api/:path*",
