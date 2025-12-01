@@ -100,14 +100,14 @@ export function FileExplorer() {
           {filteredFiles.map((file) => (
             <div
               key={file.path}
-              className="flex items-center justify-between p-2 hover:bg-gray-50 rounded cursor-pointer"
+              className="flex items-center justify-between p-2 hover:bg-accent rounded cursor-pointer"
               onClick={() => handleFileClick(file)}
             >
               <div className="flex items-center gap-2">
                 {file.type === 'folder' ? (
-                  <Folder className="w-4 h-4 text-blue-500" />
+                  <Folder className="w-4 h-4 text-primary" />
                 ) : (
-                  <File className="w-4 h-4 text-gray-500" />
+                  <File className="w-4 h-4 text-muted-foreground" />
                 )}
                 <span className="text-sm">{file.name}</span>
                 {file.type === 'file' && (

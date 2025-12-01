@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 // Assuming these are the component paths from a standard Shadcn setup
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -365,15 +365,15 @@ export default function EnterprisePage() {
                   </div>
                   <div className="flex justify-between items-center p-3 rounded-lg bg-gray-50 border">
                     <span className="font-medium">Avg. Response Time</span>
-                    <span className="font-bold text-blue-600">< 200ms</span>
+                    <span className="font-bold text-blue-600">&lt; 200ms</span>
                   </div>
                   <div className="flex justify-between items-center p-3 rounded-lg bg-gray-50 border">
                     <span className="font-medium">Support Response (Critical)</span>
-                    <span className="font-bold text-purple-600">< 1 hour</span>
+                    <span className="font-bold text-purple-600">&lt; 1 hour</span>
                   </div>
                   <div className="flex justify-between items-center p-3 rounded-lg bg-gray-50 border">
                     <span className="font-medium">Avg. Resolution Time</span>
-                    <span className="font-bold text-purple-600">< 4 hours</span>
+                    <span className="font-bold text-purple-600">&lt; 4 hours</span>
                   </div>
                 </div>
                 <Button variant="link" className="px-0 pt-4">View Full Status Page</Button>

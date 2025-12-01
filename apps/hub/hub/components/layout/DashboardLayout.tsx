@@ -73,8 +73,8 @@ const DashboardLayout = memo(function DashboardLayout({ children }: DashboardLay
   // Show loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -82,22 +82,22 @@ const DashboardLayout = memo(function DashboardLayout({ children }: DashboardLay
   const isAdmin = user && ['admin', 'super_admin'].includes(user.role);
   
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-sm border-r">
-        <div className="p-6">
-          <h2 className="text-xl font-bold text-gray-900">HenMo AI</h2>
+      <div className="w-64 bg-card border-r border-border flex flex-col h-screen fixed left-0 top-0">
+        <div className="p-6 border-b border-border">
+          <h2 className="text-xl font-bold text-foreground">HenMo AI</h2>
           {user && (
             <div className="mt-4">
-              <p className="text-sm font-medium text-gray-900">{user.name}</p>
-              <div className="flex items-center mt-1">
+              <p className="text-sm font-medium text-foreground">{user.name}</p>
+              <div className="flex items-center mt-1 flex-wrap gap-1">
                 <Badge variant={user.role === 'super_admin' ? 'destructive' : 'secondary'}>
                   {user.role === 'super_admin' ? 'Super Admin' : 
                    user.role === 'admin' ? 'Country Admin' : 
                    user.role === 'moderator' ? 'Moderator' : 'User'}
                 </Badge>
                 {user.assigned_country && (
-                  <div className="flex items-center ml-2 text-xs text-gray-500">
+                  <div className="flex items-center text-xs text-muted-foreground">
                     <Globe className="h-3 w-3 mr-1" />
                     {user.assigned_country}
                   </div>
@@ -107,10 +107,10 @@ const DashboardLayout = memo(function DashboardLayout({ children }: DashboardLay
           )}
         </div>
         
-        <nav className="px-3">
+        <nav className="flex-1 overflow-y-auto px-3 py-4">
           <div className="space-y-1">
             {navigation.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
               return (
                 <Link key={item.name} href={item.href}>
                   <Button
@@ -129,7 +129,7 @@ const DashboardLayout = memo(function DashboardLayout({ children }: DashboardLay
             <>
               <Separator className="my-4" />
               <div className="space-y-1">
-                <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Administration
                 </p>
                 {adminNavigation.map((item) => {
@@ -149,22 +149,22 @@ const DashboardLayout = memo(function DashboardLayout({ children }: DashboardLay
               </div>
             </>
           )}
-          
-          <div className="absolute bottom-4 left-3 right-3">
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
-              onClick={logout}
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Logout
-            </Button>
-          </div>
         </nav>
+        
+        <div className="p-3 border-t border-border">
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
+            onClick={logout}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
+        </div>
       </div>
       
       {/* Main content */}
-      <div className="flex-1">
+      <div className="flex-1 ml-64">
         <div className="container mx-auto px-6 py-8">
           {children}
         </div>

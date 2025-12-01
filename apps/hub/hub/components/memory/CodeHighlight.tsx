@@ -39,9 +39,9 @@ export function CodeHighlight({ code, language = 'javascript' }: CodeHighlightPr
   }, [code, language]);
 
   return (
-    <pre className="bg-gray-50 p-4 rounded-lg overflow-x-auto text-sm">
+    <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
       <code 
-        className="block whitespace-pre"
+        className="block whitespace-pre text-foreground"
         dangerouslySetInnerHTML={{ __html: highlighted }}
       />
     </pre>

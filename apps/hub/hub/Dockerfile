@@ -6,6 +6,8 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
+# Set STANDALONE_BUILD=true for Docker builds to enable standalone output
+ENV STANDALONE_BUILD=true
 RUN npm run build
 
 FROM node:18-alpine AS runner

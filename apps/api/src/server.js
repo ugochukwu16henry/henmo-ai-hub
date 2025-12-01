@@ -258,29 +258,12 @@ app.post(
 );
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).json({ error: 'Internal server error' });
-});
+const { errorHandler } = require('./middleware/errorHandler');
+app.use(errorHandler);
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({
-    error: 'Route not found',
-    path: req.originalUrl,
-    method: req.method,
-    message:
-      'The requested route does not exist. Check the API documentation or visit GET /api for available endpoints.',
-    availableRoutes: [
-      'GET /api - API information and available endpoints',
-      'GET /api/health - Health check endpoint',
-      'POST /api/auth/register - User registration',
-      'POST /api/auth/login - User login',
-      'GET /api/ai/languages - Get supported languages',
-      'GET /api/ai/personalities - Get AI personalities',
-    ],
-  });
-});
+// 404 handler - must be after error handler
+const { notFoundHandler } = require('./middleware/errorHandler');
+app.use('*', notFoundHandler);
 
 // Initialize services
 try {

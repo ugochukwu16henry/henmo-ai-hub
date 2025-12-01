@@ -42,7 +42,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} antialiased`}>
         {children}
         <Analytics />
         <SpeedInsights />
